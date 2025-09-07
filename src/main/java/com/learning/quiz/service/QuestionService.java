@@ -24,6 +24,7 @@ public class QuestionService {
             return new ResponseEntity<>(questionRepository.findAll(), HttpStatus.OK);
         }
         catch(Exception e){
+            // Traditional Java way of handling the exceptions.
             e.printStackTrace();
             return new ResponseEntity<>(new ArrayList<>(),HttpStatus.BAD_REQUEST);
         }

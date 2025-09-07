@@ -12,6 +12,7 @@ import com.learning.quiz.entity.Question;
 import com.learning.quiz.entity.QuestionWrapper;
 import com.learning.quiz.entity.Quiz;
 import com.learning.quiz.entity.QuizResponse;
+import com.learning.quiz.exception.QuizNotFoundException;
 import com.learning.quiz.repository.QuestionRepository;
 import com.learning.quiz.repository.QuizRepository;
 
@@ -39,13 +40,16 @@ public class QuizService {
     }
 
     public ResponseEntity<List<QuestionWrapper>> fetchQuiz(int id) {
+        if(quizRepo.findById(id).isEmpty()){
+            System.out.println("throwing exception.");
+            throw new QuizNotFoundException("Quiz does not exist.");
+        }
         Quiz fetchedQuiz=quizRepo.findById(id).get();
         List<QuestionWrapper> questionsForUser=new ArrayList<>();
         for(Question q:fetchedQuiz.getQuestionList()){
             QuestionWrapper questionForUser = new QuestionWrapper(q.getId(), q.getQuestionDesc(), q.getOption1(), q.getOption2(), q.getOption3(), q.getOption4());
             questionsForUser.add(questionForUser);
         }
-        
         return new ResponseEntity<>(questionsForUser,HttpStatus.OK);
     }
 
